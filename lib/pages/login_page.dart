@@ -43,6 +43,8 @@ class _LoginPageState extends State<LoginPage>{
         children: <Widget>[
           _headingWidget(),
           _inputForm(),
+          _loginButton(),
+          _registerButton(),
         ],
       ),
     );
@@ -81,6 +83,7 @@ class _LoginPageState extends State<LoginPage>{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _emailTextField(),
+            _passwordTextField(),
           ],
         ),
       ),
@@ -99,6 +102,61 @@ class _LoginPageState extends State<LoginPage>{
         focusedBorder: UnderlineInputBorder(
             borderSide: BorderSide(
                 color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _passwordTextField(){
+    return TextFormField(
+      autocorrect: false,
+      obscureText: true,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {},
+      onSaved: (_input) {},
+      cursorColor: Colors.white,
+      decoration: InputDecoration(
+        hintText: "Password",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _loginButton(){
+    return Container(
+      height: _deviceHeight * 0.06,
+      width: _deviceWidth,
+      child: MaterialButton(
+        onPressed: () {},
+        color: Colors.blue,
+        child: Text(
+          "LOGIN",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _registerButton(){
+    return GestureDetector(
+      onTap: (){},
+        child: Container(
+        height: _deviceHeight * 0.06,
+        width: _deviceWidth,
+        child: Text(
+          "REGISTER",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: Colors.white60,
+          ),
         ),
       ),
     );
