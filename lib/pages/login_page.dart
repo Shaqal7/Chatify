@@ -159,25 +159,29 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   Widget _loginButton(){
-    return Container(
-      height: _deviceHeight * 0.06,
-      width: _deviceWidth,
-      child: MaterialButton(
-        onPressed: () {
-          if(_formKey.currentState.validate()){
-            print("Valid Stuff");
-            // TODO: Login user
-          }
-        },
-        color: Colors.blue,
-        child: Text(
-          "LOGIN",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
+    return _auth.status == AuthStatus.Authenticating
+        ? Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(),
+        )
+        : Container(
+          height: _deviceHeight * 0.06,
+          width: _deviceWidth,
+          child: MaterialButton(
+            onPressed: () {
+              if(_formKey.currentState.validate()){
+                _auth.loginUserWithEmailAndPassword(_email, _password);
+              }
+            },
+            color: Colors.blue,
+            child: Text(
+              "LOGIN",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
-        ),
-      ),
     );
   }
 

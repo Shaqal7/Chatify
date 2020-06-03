@@ -28,13 +28,16 @@ class AuthProvider extends ChangeNotifier{
     status = AuthStatus.Authenticating;
     notifyListeners();
     try{
-      AuthResult _result = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      AuthResult _result = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password
+      );
       user = _result.user;
       status = AuthStatus.Authenticated;
       print('Logged In Successfully');
       // TODO: navigate to HomePage
     } catch(e) {
       status = AuthStatus.Error;
+      print('Login Error');
       // TODO: Display an error
     }
     notifyListeners();
