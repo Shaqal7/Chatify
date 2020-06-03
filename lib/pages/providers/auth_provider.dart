@@ -34,7 +34,9 @@ class AuthProvider extends ChangeNotifier{
       print('Logged In Successfully');
       // TODO: navigate to HomePage
     } catch(e) {
-
+      status = AuthStatus.Error;
+      // TODO: Display an error
     }
+    notifyListeners();
   }
 }

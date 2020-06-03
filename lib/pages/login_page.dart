@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:provider/provider.dart';
+
+import './providers/auth_provider.dart';
+
 class LoginPage extends StatefulWidget{
 
   @override
@@ -13,6 +17,9 @@ class _LoginPageState extends State<LoginPage>{
   double _deviceWidth;
 
   GlobalKey<FormState> _formKey;
+
+  String _email;
+  String _password;
 
   _LoginPageState(){
     _formKey = GlobalKey<FormState>();
@@ -32,6 +39,8 @@ class _LoginPageState extends State<LoginPage>{
   }
 
   Widget _loginPageUI(){
+    print(_email);
+    print(_password);
     return Container(
       height: _deviceHeight * 0.60,
       padding: EdgeInsets.symmetric(horizontal: _deviceWidth * 0.10),
@@ -73,10 +82,12 @@ class _LoginPageState extends State<LoginPage>{
 
   Widget _inputForm(){
     return Container(
-      height: _deviceHeight * 0.16,
+      height: _deviceHeight * 0.19,
       child: Form(
         key: _formKey,
-        onChanged: (){},
+        onChanged: (){
+          _formKey.currentState.save();
+        },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.max,
@@ -94,8 +105,16 @@ class _LoginPageState extends State<LoginPage>{
     return TextFormField(
       autocorrect: false,
       style: TextStyle(color: Colors.white),
-      validator: (_input) {},
-      onSaved: (_input) {},
+      validator: (_input) {
+        return _input.length != 0 && _input.contains("@")
+            ? null
+            : "Please enter a valid email.";
+      },
+      onSaved: (_input) {
+        setState(() {
+          _email = _input;
+        });
+      },
       cursorColor: Colors.white,
       decoration: InputDecoration(
         hintText: "Email Address",
@@ -112,8 +131,14 @@ class _LoginPageState extends State<LoginPage>{
       autocorrect: false,
       obscureText: true,
       style: TextStyle(color: Colors.white),
-      validator: (_input) {},
-      onSaved: (_input) {},
+      validator: (_input) {
+        return _input.length != 0 ? null : "Please enter a password.";
+      },
+      onSaved: (_input) {
+        setState(() {
+          _password = _input;
+        });
+      },
       cursorColor: Colors.white,
       decoration: InputDecoration(
         hintText: "Password",
@@ -130,7 +155,12 @@ class _LoginPageState extends State<LoginPage>{
       height: _deviceHeight * 0.06,
       width: _deviceWidth,
       child: MaterialButton(
-        onPressed: () {},
+        onPressed: () {
+          if(_formKey.currentState.validate()){
+            print("Valid Stuff");
+            // TODO: Login user
+          }
+        },
         color: Colors.blue,
         child: Text(
           "LOGIN",
