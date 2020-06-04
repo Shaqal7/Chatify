@@ -27,12 +27,12 @@ class RegistrationPageState extends State<RegistrationPage>{
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         alignment: Alignment.center,
-        child: signUpPageUI(),
+        child: registrationPageUI(),
       ),
     );
   }
 
-  Widget signUpPageUI() {
+  Widget registrationPageUI() {
     return Container(
       height: _deviceHeight * 0.75,
       padding: EdgeInsets.symmetric(horizontal: _deviceWidth * 0.10),
@@ -43,6 +43,8 @@ class RegistrationPageState extends State<RegistrationPage>{
         children: <Widget>[
           _headingWidget(),
           _inputForm(),
+          _registerButton(),
+          _backToLoginPageButton(),
         ],
       ),
     );
@@ -83,6 +85,9 @@ class RegistrationPageState extends State<RegistrationPage>{
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             _imageSelectorWidget(),
+            _nameTextField(),
+            _emailTextField(),
+            _passwordTextField(),
           ],
         ),
       ),
@@ -104,6 +109,114 @@ class RegistrationPageState extends State<RegistrationPage>{
                 "https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png"
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _nameTextField(){
+    return TextFormField(
+      autocorrect: false,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input.length != 0
+            ? null
+            : "Please enter a valid Name.";
+      },
+      onSaved: (_input) {
+        setState(() {
+
+        });
+      },
+      cursorColor: Colors.white,
+      decoration: InputDecoration(
+        hintText: "Name",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _emailTextField(){
+    return TextFormField(
+      autocorrect: false,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input.length != 0 && _input.contains("@")
+            ? null
+            : "Please enter a valid email.";
+      },
+      onSaved: (_input) {
+        setState(() {
+
+        });
+      },
+      cursorColor: Colors.white,
+      decoration: InputDecoration(
+        hintText: "Email",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _passwordTextField(){
+    return TextFormField(
+      autocorrect: false,
+      obscureText: true,
+      style: TextStyle(color: Colors.white),
+      validator: (_input) {
+        return _input.length != 0
+            ? null
+            : "Please enter a valid password.";
+      },
+      onSaved: (_input) {
+        setState(() {
+
+        });
+      },
+      cursorColor: Colors.white,
+      decoration: InputDecoration(
+        hintText: "Password",
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(
+              color: Colors.white),
+        ),
+      ),
+    );
+  }
+
+  Widget _registerButton(){
+    return  Container(
+      height: _deviceHeight * 0.06,
+      width: _deviceWidth,
+      child: MaterialButton(
+        onPressed: () { },
+        color: Colors.blue,
+        child: Text(
+          "REGISTER",
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+              ),
+        ),
+      ),
+    );
+  }
+
+  Widget _backToLoginPageButton(){
+    return GestureDetector(
+      onTap: (){},
+      child: Container(
+        height: _deviceHeight * 0.06,
+        width: _deviceWidth,
+        child: Icon(
+          Icons.arrow_back,
+          size: 40,
         ),
       ),
     );
