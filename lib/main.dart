@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
 import './pages/login_page.dart';
+import './pages/registration_page.dart';
 
 void main() => runApp(MyApp());
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
         accentColor: Color.fromRGBO(42, 117, 188, 1),
         backgroundColor: Color.fromRGBO(28, 27, 27, 1),
       ),
-      home: LoginPage(),
+      home: RegistrationPage(),
     );
   }
 }
