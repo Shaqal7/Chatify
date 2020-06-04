@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../services/navigation_service.dart';
+import '../services/media_service.dart';
 
 class RegistrationPage extends StatefulWidget {
 
@@ -15,7 +17,9 @@ class RegistrationPageState extends State<RegistrationPage>{
 
   GlobalKey<FormState> _formKey;
 
-  _RegistrationPageState() {
+  File _image;
+
+  _registrationPageState() {
     _formKey = GlobalKey<FormState>();
   }
 
@@ -98,16 +102,26 @@ class RegistrationPageState extends State<RegistrationPage>{
   Widget _imageSelectorWidget() {
     return Align(
       alignment: Alignment.center,
-      child: Container(
-        height: _deviceHeight * 0.10,
-        width: _deviceHeight * 0.10,
-        decoration: BoxDecoration(
-          color: Colors.transparent,
-          borderRadius: BorderRadius.circular(500),
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: NetworkImage(
-                "https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png"
+      child: GestureDetector(
+        onTap: () async {
+          File _imageFile = await MediaService.instance.getImageFromLibrary();
+          setState(() {
+            _image = _imageFile;
+          });
+        },
+        child: Container(
+          height: _deviceHeight * 0.10,
+          width: _deviceHeight * 0.10,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(500),
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: _image != null
+                  ? FileImage(_image)
+                  : NetworkImage(
+                  "https://cdn0.iconfinder.com/data/icons/occupation-002/64/programmer-programming-occupation-avatar-512.png"
+              ),
             ),
           ),
         ),

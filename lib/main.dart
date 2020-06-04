@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
+//import 'package:firebase_analytics/firebase_analytics.dart';
 import './pages/login_page.dart';
 import './pages/registration_page.dart';
 import './services/navigation_service.dart';

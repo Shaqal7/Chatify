@@ -7,7 +7,7 @@ class SnackBarService {
 
   static SnackBarService instance = SnackBarService();
 
-  SnackBarService() {}
+  SnackBarService();
 
   set buildContext(BuildContext _context) {
     _buildContext = _context;
