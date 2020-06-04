@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/snackbar_service.dart';
+import '../services/navigation_service.dart';
 
 class LoginPage extends StatefulWidget{
 
@@ -188,7 +189,9 @@ class _LoginPageState extends State<LoginPage>{
 
   Widget _registerButton(){
     return GestureDetector(
-      onTap: (){},
+      onTap: (){
+        NavigationService.instance.navigateTo("register");
+      },
         child: Container(
         height: _deviceHeight * 0.06,
         width: _deviceWidth,
