@@ -17,6 +17,9 @@ class RegistrationPageState extends State<RegistrationPage>{
 
   GlobalKey<FormState> _formKey;
 
+  String _name;
+  String _email;
+  String _password;
   File _image;
 
   _registrationPageState() {
@@ -140,7 +143,7 @@ class RegistrationPageState extends State<RegistrationPage>{
       },
       onSaved: (_input) {
         setState(() {
-
+          _name = _input;
         });
       },
       cursorColor: Colors.white,
@@ -165,7 +168,7 @@ class RegistrationPageState extends State<RegistrationPage>{
       },
       onSaved: (_input) {
         setState(() {
-
+          _email = _input;
         });
       },
       cursorColor: Colors.white,
@@ -191,7 +194,7 @@ class RegistrationPageState extends State<RegistrationPage>{
       },
       onSaved: (_input) {
         setState(() {
-
+          _password = _input;
         });
       },
       cursorColor: Colors.white,
