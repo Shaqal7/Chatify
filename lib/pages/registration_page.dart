@@ -1,19 +1,22 @@
 import 'dart:io';
+import 'package:chatify/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../services/navigation_service.dart';
 import '../services/media_service.dart';
+import '../services/cloud_storage_service.dart';
+import '../services/db_service.dart';
 
 class RegistrationPage extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return RegistrationPageState();
+    return _RegistrationPageState();
   }
 }
 
-class RegistrationPageState extends State<RegistrationPage>{
+class _RegistrationPageState extends State<RegistrationPage>{
   double _deviceHeight;
   double _deviceWidth;
 
@@ -25,7 +28,7 @@ class RegistrationPageState extends State<RegistrationPage>{
   String _password;
   File _image;
 
-  _registrationPageState() {
+  _RegistrationPageState() {
     _formKey = GlobalKey<FormState>();
   }
 
@@ -219,21 +222,34 @@ class RegistrationPageState extends State<RegistrationPage>{
   }
 
   Widget _registerButton(){
-    return  Container(
-      height: _deviceHeight * 0.06,
-      width: _deviceWidth,
-      child: MaterialButton(
-        onPressed: () { },
-        color: Colors.blue,
-        child: Text(
-          "REGISTER",
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.w700,
-              ),
-        ),
-      ),
-    );
+    return _auth.status != AuthStatus.Authenticating
+        ?  Container(
+          height: _deviceHeight * 0.06,
+          width: _deviceWidth,
+          child: MaterialButton(
+            onPressed: () {
+              if(_formKey.currentState.validate() && _image != null){
+                _auth.registerUserWithEmailAndPassword(_email, _password, (String _uid) async {
+                  var _result = await CloudStorageService.instance.uploadUserImage(_uid, _image);
+                  var _imageURL = await _result.ref.getDownloadURL();
+                  await DBService.instance.createUserInDB(_uid, _name, _email, _imageURL);
+                });
+              }
+            },
+            color: Colors.blue,
+            child: Text(
+              "REGISTER",
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                  ),
+            ),
+          ),
+        )
+        : Align(
+          alignment: Alignment.center,
+          child: CircularProgressIndicator(),
+          );
   }
 
   Widget _backToLoginPageButton(){
