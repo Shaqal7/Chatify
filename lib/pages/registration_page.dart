@@ -1,5 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/auth_provider.dart';
 import '../services/navigation_service.dart';
 import '../services/media_service.dart';
 
@@ -16,6 +18,7 @@ class RegistrationPageState extends State<RegistrationPage>{
   double _deviceWidth;
 
   GlobalKey<FormState> _formKey;
+  AuthProvider _auth;
 
   String _name;
   String _email;
@@ -35,26 +38,33 @@ class RegistrationPageState extends State<RegistrationPage>{
       backgroundColor: Theme.of(context).backgroundColor,
       body: Container(
         alignment: Alignment.center,
-        child: registrationPageUI(),
+        child: ChangeNotifierProvider<AuthProvider>.value(
+          value: AuthProvider.instance,
+          child: registrationPageUI(),
+        ),
       ),
     );
   }
 
   Widget registrationPageUI() {
-    return Container(
-      height: _deviceHeight * 0.75,
-      padding: EdgeInsets.symmetric(horizontal: _deviceWidth * 0.10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        mainAxisSize: MainAxisSize.max,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _headingWidget(),
-          _inputForm(),
-          _registerButton(),
-          _backToLoginPageButton(),
-        ],
-      ),
+    return Builder(builder: (BuildContext _context){
+      _auth = Provider.of<AuthProvider>(_context);
+      return Container(
+        height: _deviceHeight * 0.75,
+        padding: EdgeInsets.symmetric(horizontal: _deviceWidth * 0.10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisSize: MainAxisSize.max,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _headingWidget(),
+            _inputForm(),
+            _registerButton(),
+            _backToLoginPageButton(),
+          ],
+        ),
+      );
+    },
     );
   }
 
