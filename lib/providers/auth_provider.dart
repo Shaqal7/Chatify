@@ -36,11 +36,11 @@ class AuthProvider extends ChangeNotifier{
       status = AuthStatus.Authenticated;
       SnackBarService.instance.showSnackBarSuccess("Welcome, ${user.email}");
       // TODO: update lastSeen Time
-      // TODO: navigate to HomePage
+      NavigationService.instance.navigateToReplacement("home");
     } catch(e) {
       status = AuthStatus.Error;
+      user = null;
       SnackBarService.instance.showSnackBarError("Error Authenticating");
-      // TODO: Display an error
     }
     notifyListeners();
   }
@@ -57,7 +57,7 @@ class AuthProvider extends ChangeNotifier{
       SnackBarService.instance.showSnackBarSuccess("Welcome, ${user.email}");
       // TODO: update lastSeen Time
       NavigationService.instance.goBack();
-      // TODO: Navigate To Homepage
+      NavigationService.instance.navigateToReplacement("home");
     } catch(e) {
       status = AuthStatus.Error;
       user = null;
