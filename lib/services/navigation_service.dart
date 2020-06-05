@@ -23,7 +23,7 @@ class NavigationService{
     return navigatorKey.currentState.push(_route);
   }
 
-  bool goBack(){
-    return navigatorKey.currentState.pop();
+  goBack() {
+    navigatorKey.currentState.pop();
   }
 }
