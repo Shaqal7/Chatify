@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
       appBar: AppBar(
         backgroundColor: Theme.of(context).backgroundColor,
         textTheme: TextTheme(
-          title: TextStyle(fontSize: 16),
+          headline6: TextStyle(fontSize: 16),
         ),
         title: Text("Chatify"),
         bottom: TabBar(
