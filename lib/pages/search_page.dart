@@ -1,4 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import '../services/db_service.dart';
+import '../providers/auth_provider.dart';
+import '../models/contact.dart';
 
 class SearchPage extends StatefulWidget{
 
@@ -15,23 +21,36 @@ class SearchPage extends StatefulWidget{
 
 class _SearchPageState extends State<SearchPage>{
 
+  String _searchText;
+  AuthProvider _auth;
+
+  _SearchPageState(){
+    _searchText = '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: _searchPageUI(),
+      child: ChangeNotifierProvider<AuthProvider>.value(
+        value: AuthProvider.instance,
+        child: _searchPageUI(),
+      ),
     );
   }
 
   Widget _searchPageUI() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.max,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        _userSearchField(),
-        _usersListView(),
-      ],
-    );
+    return Builder(builder: (BuildContext _context) {
+      _auth = Provider.of<AuthProvider>(_context);
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          _userSearchField(),
+          _usersListView(),
+        ],
+      );
+    });
   }
 
   Widget _userSearchField() {
@@ -45,7 +64,9 @@ class _SearchPageState extends State<SearchPage>{
           color: Colors.white
         ),
         onSubmitted: (_input) {
-
+          setState(() {
+            _searchText = _input;
+          });
         },
         decoration: InputDecoration(
             prefixIcon: Icon(
@@ -65,41 +86,69 @@ class _SearchPageState extends State<SearchPage>{
   }
 
   Widget _usersListView(){
-    return Container(
-      height: this.widget._height * 0.75,
-      child: ListView.builder(
-        itemCount: 1,
-          itemBuilder: (BuildContext _context, int _index) {
-            return ListTile(
-              title: Text("Testowy title"),
-              leading: Container(
-                width: 50,
-                height: 50,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: NetworkImage('https://firebasestorage.googleapis.com/v0/b/chatify-cea06.appspot.com/o/profile_images%2FwsJ9m8D9w6OHuEjASM2vz8G47Zu1?alt=media&token=2d3fdec2-6270-4ee6-aea7-9a19d2a314fa'),
-                    //image: NetworkImage(_data[_index].image),
-                  )
+    return StreamBuilder<List<Contact>>(
+      stream: DBService.instance.getUsersInDB(_searchText),
+        builder: (_context, _snapshot){
+        var _usersData = _snapshot.data;
+        if(_usersData != null) {
+          _usersData.removeWhere((_contact) => _contact.id == _auth.user.uid);
+        }
+      return _snapshot.hasData ?
+      Container(
+        height: this.widget._height * 0.75,
+        child: ListView.builder(
+            itemCount: _usersData.length,
+            itemBuilder: (BuildContext _context, int _index) {
+              var _userData = _usersData[_index];
+              var _currentTime = DateTime.now();
+              var _isUserActive = !_userData.lastseen.toDate().isBefore(
+                  _currentTime.subtract(Duration(hours: 1),
+                  ),
+              );
+              return ListTile(
+                title: Text(_userData.name),
+                leading: Container(
+                  width: 50,
+                  height: 50,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(_userData.image),
+                        //image: NetworkImage(_data[_index].image),
+                      )
+                  ),
                 ),
-              ),
-              trailing: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: <Widget>[
-                  Text(
-                    "Last Seen",
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  Text(
-                    "About 10 months",
-                    style: TextStyle(fontSize: 15),
-                  ),
-              ]),
-            );
-      }),
-    );
+                trailing: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisSize: MainAxisSize.max,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: <Widget>[
+                      _isUserActive ? Text(
+                        "Active now",
+                        style: TextStyle(fontSize: 15),
+                      )
+                          : Text(
+                        "Last Seen",
+                        style: TextStyle(fontSize: 15),
+                      )
+                      ,
+                      _isUserActive ?
+                          Container(
+                            height: 10,
+                            width: 10,
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(100),
+                            ),
+                          ) : Text(
+                        timeago.format(_userData.lastseen.toDate()),
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ]),
+              );
+            }),
+      ) : SpinKitWanderingCubes;
+    });
   }
 }
