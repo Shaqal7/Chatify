@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'profile_page.dart';
 import 'recent_conversations_page.dart';
+import 'search_page.dart';
 
 class HomePage extends StatefulWidget{
 
@@ -65,9 +66,9 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   Widget _tabBarPages() {
     return TabBarView(controller: _tabController, children: <Widget>[
-      ProfilePage(this._height, this._width),
-      RecentConversationsPage(this._height, this._width),
-      ProfilePage(this._height, this._width),
+      SearchPage(_height, _width),
+      RecentConversationsPage(_height, _width),
+      ProfilePage(_height, _width),
     ]);
   }
 }
