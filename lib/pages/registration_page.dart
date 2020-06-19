@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:chatify/services/db_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
@@ -7,6 +6,7 @@ import '../services/navigation_service.dart';
 import '../services/media_service.dart';
 import '../services/cloud_storage_service.dart';
 import '../services/db_service.dart';
+import '../services/snackbar_service.dart';
 
 class RegistrationPage extends StatefulWidget {
 
@@ -51,6 +51,7 @@ class _RegistrationPageState extends State<RegistrationPage>{
 
   Widget registrationPageUI() {
     return Builder(builder: (BuildContext _context){
+      SnackBarService.instance.buildContext = _context;
       _auth = Provider.of<AuthProvider>(_context);
       return Container(
         height: _deviceHeight * 0.75,
