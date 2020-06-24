@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:timeago/timeago.dart' as timeago;
+import '../services/db_service.dart';
+import '../models/conversation.dart';
 
-class ConversationPage extends StatefulWidget{
+class ConversationPage extends StatefulWidget {
 
   String _conversationID;
   String _receiverID;
@@ -16,8 +21,7 @@ class ConversationPage extends StatefulWidget{
   }
 }
 
-class _ConversationPageState extends State<ConversationPage>{
-
+class _ConversationPageState extends State<ConversationPage> {
   double _deviceHeight;
   double _deviceWidth;
 
@@ -48,16 +52,30 @@ class _ConversationPageState extends State<ConversationPage>{
     return Container(
       height: _deviceHeight * 0.75,
       width: _deviceWidth,
-      child: ListView.builder(
-        itemCount: 1,
-          itemBuilder: (BuildContext _context, int _index){
-            return _textMessageBubble(true, "Hello");
-          },
+      child: StreamBuilder<Conversation>(
+        stream: DBService.instance.getConversation(this.widget._conversationID),
+        builder: (BuildContext _context, _snapshot) {
+          var _conversationData = _snapshot.data;
+          if(_conversationData != null) {
+            return ListView.builder(
+              itemCount: _conversationData.messages.length,
+              itemBuilder: (BuildContext _context, int _index){
+                var _message = _conversationData.messages[_index];
+                return _textMessageBubble(true, _message.content, _message.timestamp);
+              },
+            );
+          } else {
+            return SpinKitWanderingCubes(
+              color: Colors.blue,
+              size: 50.0,
+            );
+          }
+      },
       ),
     );
   }
 
-  Widget _textMessageBubble(bool _isOwnMessage ,String _message) {
+  Widget _textMessageBubble(bool _isOwnMessage ,String _message, Timestamp _timestamp) {
     List<Color> _colorScheme = _isOwnMessage
         ? [Colors.blue, Color.fromRGBO(42, 117, 188, 1)]
         : [Color.fromRGBO(69, 69, 69, 1), Color.fromRGBO(43, 43, 43, 1)];
@@ -78,7 +96,9 @@ class _ConversationPageState extends State<ConversationPage>{
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
           Text(_message),
-          Text("a moment ago", style: TextStyle(color: Colors.white70),
+          Text(
+            timeago.format(_timestamp.toDate()),
+            style: TextStyle(color: Colors.white70),
           ),
         ],
       ),

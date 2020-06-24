@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum MessageType {
   Text,
-  Image
+  Image,
 }
 
 class Message {
